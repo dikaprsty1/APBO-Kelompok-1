@@ -22,6 +22,11 @@ Sistem_Manajemen_Kost
 
 ---
 
+## Analisis 
+
+
+---
+
 ## Problem
 
 * Pendataan penyewa masih dilakukan secara manual sehingga rawan kesalahan dan kehilangan data
@@ -51,5 +56,9 @@ Sistem_Manajemen_Kost
 * Notifikasi jatuh tempo pembayaran
 * Dashboard admin
 * Laporan bulanan
+
+---
+
+## Target Hasil
 
 ---
