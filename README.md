@@ -143,7 +143,7 @@ Sistem ini akan mengubah alur kerja manual menjadi serba digital dengan pendekat
 3. Sistem mengirimkan pengingat (notifikasi) peringatan keterlambatan pembayaran ke akun penghuni.
 
 ### **📊 Diagram Use Case**
-![alt text](USECASE DIAGRAM.png)
+![Diagram Use Case Sistem Manajemen Kost](USECASE DIAGRAM.png)
 
 ---
 
