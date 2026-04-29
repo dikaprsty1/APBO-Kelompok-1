@@ -13,7 +13,7 @@
 
 ## 🎯 Topik & Judul Proyek
 * **Topik:** Bisnis – Manajemen Kost
-* **Judul Project:** **Smart Kost Management System:** Aplikasi Pengelolaan Kost Berbasis Web dengan Notifikasi dan Tracking Pembayaran
+* **Judul Project:** **Sistem Manajemen Kost** Aplikasi Pengelolaan Kost Berbasis Web dengan Notifikasi
 
 ## 🎯 Sasaran Pengguna (Aktor)
 Sistem Manajemen Kost ini dirancang untuk memfasilitasi koordinasi antara pengelola dan penyewa, dengan rincian peran sebagai berikut:
@@ -141,6 +141,9 @@ Sistem ini akan mengubah alur kerja manual menjadi serba digital dengan pendekat
 1. Sistem mengecek *database* setiap hari secara otomatis.
 2. Jika tanggal saat ini melewati batas jatuh tempo dan status masih "Belum Lunas", sistem otomatis memberikan penanda **Merah (Terlambat)**.
 3. Sistem mengirimkan pengingat (notifikasi) peringatan keterlambatan pembayaran ke akun penghuni.
+
+### **📊 Diagram Use Case**
+![alt text](USECASE DIAGRAM.png)
 
 ---
 
