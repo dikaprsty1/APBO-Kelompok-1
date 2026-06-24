@@ -76,7 +76,43 @@ Dari hasil observasi tersebut, kami menyimpulkan bahwa pengelolaan operasional k
 3. **Data Administrasi Penghuni yang Sering Tercecer:** Proses pengumpulan data diri penyewa, seperti fotokopi KTP untuk keperluan pelaporan ke pihak lingkungan (RT/RW), masih mengandalkan pencatatan manual. Data ini rawan hilang, terselip, atau bahkan terlupa untuk dikumpulkan oleh penjaga kost di awal masa sewa.
 4. **Kesulitan dalam Memantau Ketersediaan Kamar:** Pihak pemilik atau pengelola kesulitan untuk mengetahui status kamar (kamar mana yang kosong, terisi, atau sedang direnovasi) secara tepat waktu (real-time). Mereka sering kali hanya mengandalkan ingatan atau harus mengecek kembali ke catatan kertas yang bisa saja tidak akurat.
 
----
+<br>
+
+**Q: Siapa saja yang terlibat dalam pengelolaan kost ini dan apa saja kegiatan utamanya setiap hari?**
+> Pengelolaan kost ini pada dasarnya melibatkan dua pihak utama, yaitu pemilik kost dan penjaga kost yang bertindak sebagai admin. Untuk kegiatan sehari-harinya, penjaga kost rutin melakukan pendataan jika ada penghuni yang baru masuk, mengecek kondisi kamar-kamar, serta memastikan kebersihan di setiap area dan lorong kost tetap terjaga.
+
+**Q: Bagaimana cara pihak pengelola mencatat data penghuni kost saat ini?**
+> Untuk keperluan pemasaran dan mencari penyewa baru, pengelola sudah memanfaatkan aplikasi pihak ketiga seperti Mamikos. Namun, ketika penghuni sudah resmi masuk, pendataan administrasinya masih mengandalkan cara manual (dicatat di buku). Hal ini sering menjadi masalah, terutama ketika pihak RT atau RW setempat meminta laporan data penduduk sementara. Admin sering kali lupa mencatat atau kehilangan kertas datanya karena belum ada sistem penyimpanan digital yang terpusat.
+
+</details>
+
+<details>
+<summary><b>Bagian 2: Sistem Pembayaran dan Kendala di Lapangan</b></summary>
+
+<br>
+
+**Q: Bagaimana mekanisme pembayaran kost bulanan yang diterapkan saat ini?**
+> Mayoritas penghuni melakukan pembayaran sewa kamar melalui metode transfer bank. Walaupun begitu, pengelola juga masih menerima pembayaran menggunakan uang tunai secara langsung bagi anak-anak kost yang lebih memilih metode tersebut.
+
+**Q: Apakah sering terjadi kasus keterlambatan pembayaran sewa?**
+> Kejadian keterlambatan pembayaran bisa dibilang cukup sering terjadi. Hal ini wajar mengingat rata-rata penghuni di sini adalah mahasiswa. Mereka biasanya harus menunggu kiriman uang bulanan dari orang tua masing-masing di kampung halaman, sehingga jadwal pembayarannya sering kali meleset dari tanggal jatuh tempo.
+
+**Q: Apa saja kendala terbesar yang dirasakan dalam mengelola bisnis kosan ini?**
+> Kendala yang paling terasa ada pada aspek pemasaran dan letak geografis. Lokasi bangunan kost ini berada cukup dalam di area gang, sehingga sangat menyulitkan jika ada penghuni yang membawa kendaraan roda empat (mobil). Posisi di dalam gang ini juga membuat bangunan kost kurang terlihat dari jalan utama, sehingga mengurangi jangkauan visibilitas bagi calon penyewa baru.
+
+</details>
+
+<details>
+<summary><b>Bagian 3: Harapan Terhadap Pengembangan Sistem</b></summary>
+
+<br>
+
+**Q: Jika nantinya ada sebuah sistem manajemen digital yang dibangun, fitur apa yang paling diharapkan?**
+> Harapan terbesar dari pengelola adalah terciptanya efisiensi dalam alur pembayaran bulanan. Pihak pengelola ingin agar penghuni tidak perlu lagi repot-repot mengirim pesan konfirmasi transfer (mengirim bukti struk) secara manual melalui WhatsApp kepada admin. Sistem diharapkan mampu memproses pembayaran secara otomatis, misalnya dengan menyediakan opsi pembayaran melalui QRIS atau Virtual Account. Selain itu, diharapkan ada fitur notifikasi yang bisa langsung memberitahukan kepada pemilik kost apabila ada pembayaran yang masuk. Sistem juga diharapkan memiliki kemampuan untuk mengarsip biodata diri penghuni serta merinci tagihan secara otomatis.
+
+</details>
+
+<br>
 
 # Solusi dan Perbandingan Prosedur Operasional (SOP)
 
