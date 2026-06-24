@@ -147,7 +147,7 @@ Untuk mengatasi permasalahan di atas, kami mengusulkan pembangunan sebuah sistem
 
 
 ### Class Diagram
-![Class Digram Sistem Manajemen Kost](Class Diagram.jpg)
+![Class Digram Sistem Manajemen Kost](Diagram_Sequence.jpeg)
 ---
 
 ## Target Hasil Akhir yang Diharapkan
