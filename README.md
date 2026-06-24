@@ -145,10 +145,75 @@ Untuk mengatasi permasalahan di atas, kami mengusulkan pembangunan sebuah sistem
 ### Diagram Use Case
 ![Diagram Use Case Sistem Manajemen Kost](USECASE_DIAGRAM.png)
 
-
 ### Class Diagram
-![Class Digram Sistem Manajemen Kost](Diagram_Sequence.jpeg)
+![Class Digram Sistem Manajemen Kost](Class_Diagram.jpeg)
+
+
+### Diagram Sequence
+![Diagram Sequence Sistem Manajemen Kost](Diagram_Sequence.jpeg)
+
+### Penjelasan Diagram Sekuensial (Sequence Diagram) - Alur Pembayaran dan Verifikasi
+
+Diagram sekuensial di atas memvisualisasikan urutan interaksi langkah demi langkah antara pengguna (aktor), antarmuka aplikasi, sistem pengendali (controller), dan pangkalan data (database) pada saat proses pelunasan tagihan sewa. Untuk menguraikan kompleksitasnya, alur kerja ini dibagi menjadi dua fase utama yang saling berkesinambungan:
+
+**1. Fase Pertama: Pengajuan Pembayaran oleh Penghuni**
+Fase ini berfokus pada tindakan yang dilakukan oleh penyewa kamar dari awal melihat tagihan hingga menyerahkan bukti bayar ke dalam sistem.
+
+* **Langkah 1 (Akses Antarmuka):** Penghuni masuk ke dalam aplikasi dan membuka halaman menu tagihan bulanan.
+* **Langkah 2 (Pengambilan Data Historis):** Antarmuka aplikasi akan mengirimkan instruksi kepada sistem pengendali (controller) untuk menarik data tagihan. Sistem kemudian mencari data ke dalam tabel 'Tagihan', secara spesifik menyaring tagihan atas nama penghuni tersebut yang masih berstatus "Belum Lunas".
+* **Langkah 3 (Tindakan Pengguna):** Setelah rincian tagihan (seperti nominal sewa dan batas waktu) ditampilkan di layar, penghuni melakukan pembayaran (misalnya melalui transfer bank). Setelah transaksi selesai, penghuni wajib mengunggah dokumen atau foto bukti transfer melalui formulir yang tersedia.
+* **Langkah 4 (Penyimpanan Transaksi):** Sistem menerima unggahan bukti tersebut dan mengeksekusi perintah untuk membuat satu baris data baru di dalam tabel 'Pembayaran'. Data baru ini secara otomatis diberikan status "Menunggu". 
+* **Kondisi Akhir Fase 1:** Layar aplikasi penghuni akan menampilkan pesan bahwa pembayaran sedang diproses. Pada titik ini, secara administratif tagihan tersebut masih belum dianggap lunas, melainkan sedang dalam antrean pemeriksaan oleh pengelola.
+
+**2. Fase Kedua: Verifikasi Pembayaran oleh Admin**
+Fase ini berfokus pada validasi manual yang dilakukan oleh pihak pengelola kost untuk memastikan uang benar-benar sudah diterima sebelum tagihan ditutup.
+
+* **Langkah 1 (Akses Dasbor Pengelola):** Admin kost masuk ke dalam sistem dan membuka halaman dasbor khusus pengelola.
+* **Langkah 2 (Penarikan Antrean Pemeriksaan):** Sistem akan memfilter isi pangkalan data dan menampilkan daftar seluruh transaksi dari tabel 'Pembayaran' yang saat ini memiliki status "Menunggu".
+* **Langkah 3 (Validasi Visual):** Admin membuka rincian transaksi tersebut dan melakukan pengecekan secara manual. Admin mencocokkan dokumen foto bukti transfer dengan mutasi rekening asli (mengecek kesesuaian nominal, tanggal, dan nama pengirim).
+* **Langkah 4 (Pembaruan Status Ganda):** Apabila bukti transaksi dinilai sah dan uang telah masuk, admin akan menekan tombol persetujuan (ACC). Tindakan klik ini akan memicu sistem untuk melakukan dua perubahan pangkalan data sekaligus di latar belakang:
+  * Pertama, sistem memperbarui riwayat di tabel 'Pembayaran' menjadi "Disetujui".
+  * Kedua, sistem menutup kewajiban penghuni dengan mengubah status pada tabel 'Tagihan' utama menjadi "Lunas".
+* **Langkah 5 (Penyelesaian Alur):** Sebagai penutup siklus, sistem akan menampilkan notifikasi keberhasilan di layar admin, dan secara bersamaan mengirimkan pesan pemberitahuan kepada penghuni bahwa pembayaran sewa mereka telah berhasil divalidasi dan dinyatakan lunas.
+*
+
+### Diagram State
+![Diagram State Sistem Manajemen Kost](Diagram_State.jpeg)
+
+### Penjelasan Diagram Status (State Machine Diagram) - Siklus Hidup Tagihan
+
+Diagram status di atas menggambarkan siklus hidup (lifecycle) serta perubahan kondisi perilaku (behavioral states) dari sebuah entitas tagihan sewa bulanan. Perpindahan dari satu kondisi ke kondisi lain dipicu oleh dua faktor utama, yaitu tindakan pengguna (event-driven) dan batasan waktu otomatis (time-driven). Berikut adalah penjelasan detail mengenai setiap tahapan kondisi yang terjadi di dalam sistem:
+
+**1. Kondisi Awal: Belum Lunas (Unpaid State)**
+Kondisi ini merupakan titik masuk pertama kali ketika sebuah data tagihan baru tercipta di dalam sistem.
+
+* **Pemicu Perubahan:** Transisi ini berjalan secara otomatis melalui jadwal rutin sistem (cron job) yang disetel setiap bulan, tepatnya pada tujuh hari sebelum tanggal jatuh tempo sewa kamar penghuni.
+* **Karakteristik Kondisi:** Pada tahap ini, tagihan bersifat aktif dan akan memunculkan nilai nominal yang harus dibayar pada halaman utama dasbor penghuni. Sistem juga akan mulai mengaktifkan fungsi penghitungan mundur (countdown) menuju tanggal batas pengembalian.
+
+**2. Kondisi Pemeriksaan: Menunggu Verifikasi (Pending Verification State)**
+Kondisi ini merupakan tahapan krusial di mana data tagihan sedang dibekukan sementara untuk menunggu tindakan dari pihak pengelola kost.
+
+* **Pemicu Perubahan:** Transisi dari kondisi "Belum Lunas" menuju "Menunggu Verifikasi" dipicu sepenuhnya oleh tindakan penghuni yang melakukan unggahan dokumen atau foto bukti transfer bank ke dalam sistem.
+* **Karakteristik Kondisi:** Ketika tagihan berada dalam kondisi ini, penghuni tidak dapat melakukan unggahan ulang bukti pembayaran untuk mencegah terjadinya tumpang tindih data. Data tagihan ini akan masuk ke dalam antrean dasbor admin untuk diperiksa keabsahannya.
+
+**3. Kondisi Akhir: Lunas (Paid State)**
+Kondisi ini merupakan tahap penyelesaian akhir dari siklus hidup sebuah tagihan pada bulan berjalan.
+
+* **Pemicu Perubahan:** Transisi ini terjadi apabila admin melakukan validasi visual dan menekan tombol persetujuan (ACC) pada data pembayaran yang diajukan.
+* **Karakteristik Kondisi:** Setelah mencapai kondisi "Lunas", data tagihan akan dikunci dan dipindahkan ke dalam tabel riwayat pembukuan (history). Sistem akan menghentikan seluruh fungsi penagihan untuk bulan tersebut, dan status kamar akan tetap dinyatakan aman (aktif).
+
+**4. Kondisi Khusus: Terlambat (Overdue State)**
+Kondisi ini merupakan sebuah status penalti yang terjadi akibat adanya pelanggaran batas waktu pembayaran yang telah disepakati di dalam kontrak sewa.
+
+* **Pemicu Perubahan:** Kondisi "Terlambat" dapat dipicu oleh dua skenario yang berbeda di lapangan:
+  * **Skenario Pertama (Faktor Waktu):** Perubahan otomatis dari kondisi "Belum Lunas" menjadi "Terlambat" apabila tanggal kalender saat ini telah melewati tanggal jatuh tempo yang tertera pada tagihan, sementara penghuni belum melakukan unggahan bukti sama sekali.
+  * **Skenario Kedua (Faktor Validasi):** Perubahan dari kondisi "Menunggu Verifikasi" menjadi "Terlambat" apabila admin menolak bukti pembayaran yang diunggah (misalnya karena foto buram atau nominal tidak sesuai) dan pada saat penolakan tersebut dilakukan, waktu kalender memang sudah melewati tanggal jatuh tempo.
+* **Karakteristik Kondisi:** Ketika tagihan berubah menjadi kondisi "Terlambat", sistem akan memberikan penanda visual berwarna merah di dasbor penghuni dan memicu fungsi otomatisasi pengiriman notifikasi pengingat (reminder) keterlambatan secara berkala.
+
+5. Alur Pemulihan Keterlambatan (Mekanisme Retri)
+Sistem menyediakan jalur pemulihan bagi penghuni yang berada dalam kondisi penalti "Terlambat". Penghuni diwajibkan untuk melakukan pembayaran ulang dan mengunggah bukti transfer yang baru. Tindakan unggah ulang ini akan memicu sistem untuk mengembalikan status tagihan dari "Terlambat" ke kondisi "Menunggu Verifikasi" kembali, sehingga admin dapat memproses ulang pembayaran tersebut hingga akhirnya mencapai kondisi "Lunas".
 ---
+
 
 ## Target Hasil Akhir yang Diharapkan
 * **Bagi Pihak Pengelola (Admin):** Sistem ini sangat diharapkan mampu menghilangkan beban kerja berat terkait penagihan pembayaran yang harus dilakukan dari kamar ke kamar, serta meminimalisir kesalahan atau kehilangan data dalam proses pencatatan administrasi.
