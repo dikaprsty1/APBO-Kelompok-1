@@ -188,66 +188,111 @@ Untuk mengatasi permasalahan di atas, kami mengusulkan pembangunan sebuah sistem
 ### Diagram Sequence
 ![Diagram Sequence Sistem Manajemen Kost](Diagram_Sequence.jpeg)
 
-### Penjelasan Diagram Sekuensial (Sequence Diagram) - Alur Pembayaran dan Verifikasi
+### Penjelasan Diagram Sequence
 
-Diagram sekuensial di atas memvisualisasikan urutan interaksi langkah demi langkah antara pengguna (aktor), antarmuka aplikasi, sistem pengendali (controller), dan pangkalan data (database) pada saat proses pelunasan tagihan sewa. Untuk menguraikan kompleksitasnya, alur kerja ini dibagi menjadi dua fase utama yang saling berkesinambungan:
+Diagram sekuensial di atas menunjukkan alur interaksi antara penghuni, aplikasi, sistem, dan database selama proses pembayaran tagihan sewa. Secara umum, proses ini terdiri dari dua tahap utama, yaitu pengajuan pembayaran oleh penghuni dan verifikasi pembayaran oleh admin.
 
-**1. Fase Pertama: Pengajuan Pembayaran oleh Penghuni**
-Fase ini berfokus pada tindakan yang dilakukan oleh penyewa kamar dari awal melihat tagihan hingga menyerahkan bukti bayar ke dalam sistem.
+## 1. Tahap Pengajuan Pembayaran oleh Penghuni
 
-* **Langkah 1 (Akses Antarmuka):** Penghuni masuk ke dalam aplikasi dan membuka halaman menu tagihan bulanan.
-* **Langkah 2 (Pengambilan Data Historis):** Antarmuka aplikasi akan mengirimkan instruksi kepada sistem pengendali (controller) untuk menarik data tagihan. Sistem kemudian mencari data ke dalam tabel 'Tagihan', secara spesifik menyaring tagihan atas nama penghuni tersebut yang masih berstatus "Belum Lunas".
-* **Langkah 3 (Tindakan Pengguna):** Setelah rincian tagihan (seperti nominal sewa dan batas waktu) ditampilkan di layar, penghuni melakukan pembayaran (misalnya melalui transfer bank). Setelah transaksi selesai, penghuni wajib mengunggah dokumen atau foto bukti transfer melalui formulir yang tersedia.
-* **Langkah 4 (Penyimpanan Transaksi):** Sistem menerima unggahan bukti tersebut dan mengeksekusi perintah untuk membuat satu baris data baru di dalam tabel 'Pembayaran'. Data baru ini secara otomatis diberikan status "Menunggu". 
-* **Kondisi Akhir Fase 1:** Layar aplikasi penghuni akan menampilkan pesan bahwa pembayaran sedang diproses. Pada titik ini, secara administratif tagihan tersebut masih belum dianggap lunas, melainkan sedang dalam antrean pemeriksaan oleh pengelola.
+Pada tahap ini, penghuni melakukan pembayaran dan mengirimkan bukti pembayaran melalui sistem.
 
-**2. Fase Kedua: Verifikasi Pembayaran oleh Admin**
-Fase ini berfokus pada validasi manual yang dilakukan oleh pihak pengelola kost untuk memastikan uang benar-benar sudah diterima sebelum tagihan ditutup.
+* **Langkah 1 (Membuka Halaman Tagihan)**  
+  Penghuni login ke aplikasi lalu membuka menu tagihan untuk melihat rincian pembayaran yang harus diselesaikan.
 
-* **Langkah 1 (Akses Dasbor Pengelola):** Admin kost masuk ke dalam sistem dan membuka halaman dasbor khusus pengelola.
-* **Langkah 2 (Penarikan Antrean Pemeriksaan):** Sistem akan memfilter isi pangkalan data dan menampilkan daftar seluruh transaksi dari tabel 'Pembayaran' yang saat ini memiliki status "Menunggu".
-* **Langkah 3 (Validasi Visual):** Admin membuka rincian transaksi tersebut dan melakukan pengecekan secara manual. Admin mencocokkan dokumen foto bukti transfer dengan mutasi rekening asli (mengecek kesesuaian nominal, tanggal, dan nama pengirim).
-* **Langkah 4 (Pembaruan Status Ganda):** Apabila bukti transaksi dinilai sah dan uang telah masuk, admin akan menekan tombol persetujuan (ACC). Tindakan klik ini akan memicu sistem untuk melakukan dua perubahan pangkalan data sekaligus di latar belakang:
-  * Pertama, sistem memperbarui riwayat di tabel 'Pembayaran' menjadi "Disetujui".
-  * Kedua, sistem menutup kewajiban penghuni dengan mengubah status pada tabel 'Tagihan' utama menjadi "Lunas".
-* **Langkah 5 (Penyelesaian Alur):** Sebagai penutup siklus, sistem akan menampilkan notifikasi keberhasilan di layar admin, dan secara bersamaan mengirimkan pesan pemberitahuan kepada penghuni bahwa pembayaran sewa mereka telah berhasil divalidasi dan dinyatakan lunas.
-*
+* **Langkah 2 (Menampilkan Data Tagihan)**  
+  Aplikasi meminta data tagihan kepada sistem. Selanjutnya sistem mengambil data dari database dan menampilkan tagihan milik penghuni yang masih berstatus **"Belum Lunas"**.
+
+* **Langkah 3 (Melakukan Pembayaran)**  
+  Setelah informasi tagihan ditampilkan, penghuni melakukan pembayaran, misalnya melalui transfer bank. Setelah pembayaran selesai, penghuni mengunggah foto atau dokumen bukti transfer ke dalam sistem.
+
+* **Langkah 4 (Menyimpan Data Pembayaran)**  
+  Sistem menerima bukti pembayaran yang diunggah dan menyimpannya ke tabel **Pembayaran** di database. Status pembayaran otomatis diset menjadi **"Menunggu"** karena masih perlu diperiksa oleh admin.
+
+* **Hasil Tahap Pertama**  
+  Sistem menampilkan pemberitahuan bahwa pembayaran sedang diproses. Pada tahap ini tagihan belum dianggap lunas karena masih menunggu proses verifikasi dari admin.
+
+## 2. Tahap Verifikasi Pembayaran oleh Admin
+
+Tahap ini dilakukan oleh admin untuk memastikan pembayaran yang dikirim penghuni benar-benar sudah diterima.
+
+* **Langkah 1 (Masuk ke Dashboard Admin)**  
+  Admin login ke dalam sistem dan membuka dashboard pengelolaan pembayaran.
+
+* **Langkah 2 (Melihat Daftar Pembayaran Menunggu Verifikasi)**  
+  Sistem menampilkan daftar pembayaran yang memiliki status **"Menunggu"** sehingga dapat diperiksa oleh admin.
+
+* **Langkah 3 (Memeriksa Bukti Pembayaran)**  
+  Admin membuka detail pembayaran dan mencocokkan bukti transfer dengan data transaksi yang ada pada rekening penerima, seperti nominal pembayaran, tanggal transaksi, dan nama pengirim.
+
+* **Langkah 4 (Menyetujui Pembayaran)**  
+  Jika pembayaran dinyatakan valid, admin menekan tombol **ACC**. Setelah itu sistem akan melakukan dua pembaruan data sekaligus, yaitu:
+  
+  * Mengubah status pada tabel **Pembayaran** menjadi **"Disetujui"**.
+  * Mengubah status pada tabel **Tagihan** menjadi **"Lunas"**.
+
+* **Langkah 5 (Proses Selesai)**  
+  Setelah data berhasil diperbarui, sistem menampilkan notifikasi bahwa verifikasi berhasil dilakukan. Selain itu, penghuni juga akan menerima pemberitahuan bahwa pembayaran telah diterima dan tagihan sewa telah dinyatakan lunas.
 
 ### Diagram State
 ![Diagram State Sistem Manajemen Kost](Diagram_State.jpeg)
 
-### Penjelasan Diagram Status (State Machine Diagram) - Siklus Hidup Tagihan
+### Penjelasan Diagram State
 
-Diagram status di atas menggambarkan siklus hidup (lifecycle) serta perubahan kondisi perilaku (behavioral states) dari sebuah entitas tagihan sewa bulanan. Perpindahan dari satu kondisi ke kondisi lain dipicu oleh dua faktor utama, yaitu tindakan pengguna (event-driven) dan batasan waktu otomatis (time-driven). Berikut adalah penjelasan detail mengenai setiap tahapan kondisi yang terjadi di dalam sistem:
+Diagram status di atas menunjukkan perubahan status yang dapat terjadi pada sebuah tagihan sewa selama proses pembayaran berlangsung. Perubahan status tersebut dapat terjadi karena tindakan pengguna maupun karena kondisi waktu tertentu, seperti melewati tanggal jatuh tempo. Berikut penjelasan setiap status yang terdapat dalam sistem.
 
-**1. Kondisi Awal: Belum Lunas (Unpaid State)**
-Kondisi ini merupakan titik masuk pertama kali ketika sebuah data tagihan baru tercipta di dalam sistem.
+## 1. Status Awal: Belum Lunas (Unpaid)
 
-* **Pemicu Perubahan:** Transisi ini berjalan secara otomatis melalui jadwal rutin sistem (cron job) yang disetel setiap bulan, tepatnya pada tujuh hari sebelum tanggal jatuh tempo sewa kamar penghuni.
-* **Karakteristik Kondisi:** Pada tahap ini, tagihan bersifat aktif dan akan memunculkan nilai nominal yang harus dibayar pada halaman utama dasbor penghuni. Sistem juga akan mulai mengaktifkan fungsi penghitungan mundur (countdown) menuju tanggal batas pengembalian.
+Status **Belum Lunas** merupakan kondisi awal ketika sistem membuat tagihan baru untuk penghuni.
 
-**2. Kondisi Pemeriksaan: Menunggu Verifikasi (Pending Verification State)**
-Kondisi ini merupakan tahapan krusial di mana data tagihan sedang dibekukan sementara untuk menunggu tindakan dari pihak pengelola kost.
+* **Pemicu Masuk ke Status Ini**  
+  Sistem secara otomatis membuat tagihan setiap bulan, biasanya beberapa hari sebelum tanggal jatuh tempo pembayaran.
 
-* **Pemicu Perubahan:** Transisi dari kondisi "Belum Lunas" menuju "Menunggu Verifikasi" dipicu sepenuhnya oleh tindakan penghuni yang melakukan unggahan dokumen atau foto bukti transfer bank ke dalam sistem.
-* **Karakteristik Kondisi:** Ketika tagihan berada dalam kondisi ini, penghuni tidak dapat melakukan unggahan ulang bukti pembayaran untuk mencegah terjadinya tumpang tindih data. Data tagihan ini akan masuk ke dalam antrean dasbor admin untuk diperiksa keabsahannya.
+* **Karakteristik Status**  
+  Pada kondisi ini, tagihan akan ditampilkan pada dashboard penghuni beserta informasi nominal pembayaran dan batas waktu pembayaran yang harus dipenuhi.
 
-**3. Kondisi Akhir: Lunas (Paid State)**
-Kondisi ini merupakan tahap penyelesaian akhir dari siklus hidup sebuah tagihan pada bulan berjalan.
+## 2. Status Menunggu Verifikasi (Pending Verification)
 
-* **Pemicu Perubahan:** Transisi ini terjadi apabila admin melakukan validasi visual dan menekan tombol persetujuan (ACC) pada data pembayaran yang diajukan.
-* **Karakteristik Kondisi:** Setelah mencapai kondisi "Lunas", data tagihan akan dikunci dan dipindahkan ke dalam tabel riwayat pembukuan (history). Sistem akan menghentikan seluruh fungsi penagihan untuk bulan tersebut, dan status kamar akan tetap dinyatakan aman (aktif).
+Status ini menunjukkan bahwa penghuni telah melakukan pembayaran dan mengirimkan bukti pembayaran, tetapi masih menunggu pemeriksaan dari admin.
 
-**4. Kondisi Khusus: Terlambat (Overdue State)**
-Kondisi ini merupakan sebuah status penalti yang terjadi akibat adanya pelanggaran batas waktu pembayaran yang telah disepakati di dalam kontrak sewa.
+* **Pemicu Perubahan Status**  
+  Status berubah dari **Belum Lunas** menjadi **Menunggu Verifikasi** setelah penghuni mengunggah bukti pembayaran ke dalam sistem.
 
-* **Pemicu Perubahan:** Kondisi "Terlambat" dapat dipicu oleh dua skenario yang berbeda di lapangan:
-  * **Skenario Pertama (Faktor Waktu):** Perubahan otomatis dari kondisi "Belum Lunas" menjadi "Terlambat" apabila tanggal kalender saat ini telah melewati tanggal jatuh tempo yang tertera pada tagihan, sementara penghuni belum melakukan unggahan bukti sama sekali.
-  * **Skenario Kedua (Faktor Validasi):** Perubahan dari kondisi "Menunggu Verifikasi" menjadi "Terlambat" apabila admin menolak bukti pembayaran yang diunggah (misalnya karena foto buram atau nominal tidak sesuai) dan pada saat penolakan tersebut dilakukan, waktu kalender memang sudah melewati tanggal jatuh tempo.
-* **Karakteristik Kondisi:** Ketika tagihan berubah menjadi kondisi "Terlambat", sistem akan memberikan penanda visual berwarna merah di dasbor penghuni dan memicu fungsi otomatisasi pengiriman notifikasi pengingat (reminder) keterlambatan secara berkala.
+* **Karakteristik Status**  
+  Selama proses verifikasi berlangsung, penghuni tidak dapat mengunggah bukti pembayaran baru. Data pembayaran akan masuk ke daftar pemeriksaan yang dapat dilihat oleh admin.
 
-5. Alur Pemulihan Keterlambatan (Mekanisme Retri)
-Sistem menyediakan jalur pemulihan bagi penghuni yang berada dalam kondisi penalti "Terlambat". Penghuni diwajibkan untuk melakukan pembayaran ulang dan mengunggah bukti transfer yang baru. Tindakan unggah ulang ini akan memicu sistem untuk mengembalikan status tagihan dari "Terlambat" ke kondisi "Menunggu Verifikasi" kembali, sehingga admin dapat memproses ulang pembayaran tersebut hingga akhirnya mencapai kondisi "Lunas".
+## 3. Status Lunas (Paid)
+
+Status **Lunas** menandakan bahwa pembayaran telah berhasil diverifikasi dan diterima oleh admin.
+
+* **Pemicu Perubahan Status**  
+  Status berubah menjadi **Lunas** ketika admin memeriksa bukti pembayaran dan menyetujuinya melalui sistem.
+
+* **Karakteristik Status**  
+  Setelah tagihan berstatus lunas, proses pembayaran dianggap selesai. Data pembayaran akan tersimpan sebagai riwayat transaksi dan sistem tidak akan lagi mengirimkan pengingat pembayaran untuk tagihan tersebut.
+
+## 4. Status Terlambat (Overdue)
+
+Status **Terlambat** diberikan kepada penghuni yang belum menyelesaikan pembayaran hingga melewati tanggal jatuh tempo.
+
+* **Pemicu Perubahan Status**  
+  Status ini dapat terjadi dalam dua kondisi:
+
+  * Penghuni belum mengunggah bukti pembayaran hingga melewati tanggal jatuh tempo.
+  * Bukti pembayaran ditolak oleh admin setelah tanggal jatuh tempo karena data yang dikirim tidak sesuai atau tidak valid.
+
+* **Karakteristik Status**  
+  Ketika tagihan berstatus terlambat, sistem akan memberikan tanda khusus pada dashboard penghuni dan mengirimkan notifikasi pengingat secara berkala agar pembayaran segera diselesaikan.
+
+## 5. Proses Pemulihan dari Status Terlambat
+
+Sistem menyediakan kesempatan bagi penghuni untuk memperbaiki status pembayaran yang terlambat.
+
+* **Pemicu Perubahan Status**  
+  Penghuni melakukan pembayaran ulang dan mengunggah bukti pembayaran yang baru.
+
+* **Karakteristik Proses**  
+  Setelah bukti pembayaran baru dikirim, status tagihan akan kembali menjadi **Menunggu Verifikasi**. Selanjutnya admin dapat melakukan pemeriksaan ulang hingga pembayaran dinyatakan **Lunas**.
+
 ---
 
 
